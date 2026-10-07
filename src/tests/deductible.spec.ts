@@ -35,15 +35,19 @@ test.describe('Deductible', () => {
       await quotePage.open();
       const baseline = await quotePage.price.total();
 
-      expect(await quotePage.deductible.selected(), 'the quote should load on its default').toBe(
-        DEDUCTIBLE_LADDER.defaultOption,
-      );
+      await expect
+        .poll(() => quotePage.deductible.selected(), {
+          message: 'the quote should load on its default',
+        })
+        .toBe(DEDUCTIBLE_LADDER.defaultOption);
 
       await steps.selectDeductible(option);
 
-      expect(await quotePage.deductible.selected(), 'the dropdown should show the choice').toBe(
-        option,
-      );
+      await expect
+        .poll(() => quotePage.deductible.selected(), {
+          message: 'the dropdown should show the choice',
+        })
+        .toBe(option);
 
       await expect.soft
         .poll(() => quotePage.price.total(), {

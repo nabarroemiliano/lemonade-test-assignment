@@ -5,6 +5,8 @@ dotenv.config({ quiet: true });
 
 const isCI = Boolean(process.env.CI);
 
+const isListingTests = process.argv.includes('--list');
+
 export default defineConfig({
   testDir: './src/tests',
   outputDir: './test-results',
@@ -19,7 +21,7 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
-    ['allure-playwright'],
+    ...(isListingTests ? [] : [['allure-playwright'] as const]),
   ],
 
   use: {

@@ -101,8 +101,6 @@ test.describe('Coverage amounts', () => {
       await quotePage.open();
       const baseline = await quotePage.price.total();
 
-      // Hard: without a correctly priced quote at $20,000 there is no
-      // meaningful baseline to demonstrate the defect against.
       await steps.setCoverageAmount('Loss of use', 20_000);
       await expect
         .poll(() => quotePage.price.total())
@@ -111,7 +109,6 @@ test.describe('Coverage amounts', () => {
       const at20k = await quotePage.price.total();
       await steps.setCoverageAmount('Loss of use', 25_000);
 
-      // Hard: this is the assertion the test exists in order to fail on.
       await expect
         .poll(() => quotePage.price.total().then((total) => total.amount), { timeout: 3_000 })
         .toBeGreaterThan(at20k.amount);

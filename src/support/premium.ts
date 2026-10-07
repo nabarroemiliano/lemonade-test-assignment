@@ -39,6 +39,7 @@ function roundToCents(value: Money): Money {
   return Math.round(value * 100) / 100;
 }
 
+/** Parses the currency amount from the text of the page and returns the float value. */
 export function parseMoney(text: string): Money {
   const match = CURRENCY_PATTERN.exec(text);
   if (match?.[1] === undefined) {

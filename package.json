@@ -7,6 +7,8 @@
     "node": ">=20"
   },
   "scripts": {
+    "clean:allure": "node -e \"require('node:fs').rmSync('allure-results', { recursive: true, force: true })\"",
+    "pretest": "npm run clean:allure",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",

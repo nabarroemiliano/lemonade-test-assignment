@@ -24,12 +24,10 @@ npm run clean:allure                         # wipe allure-results
 
 Point the suite somewhere else with `.env` — see `.env.example`:
 
-
 | Variable   | Default                                            |
 | ---------- | -------------------------------------------------- |
 | `BASE_URL` | `https://lemonade-hq.github.io/qa-interview-task/` |
 | `QUOTE_ID` | `LQ42EE07089`                                      |
-
 
 ---
 
@@ -37,7 +35,6 @@ Point the suite somewhere else with `.env` — see `.env.example`:
 
 16 tests across 6 specs, all passing headless. Every case is its own Playwright test with its own
 browser context — no shared state, no ordering requirement.
-
 
 | Spec                             | Tests | What it asserts                                                                                                                                                                                                     |
 | -------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -47,7 +44,6 @@ browser context — no shared state, no ordering requirement.
 | `deductible.spec.ts`             | 3     | $250 (lower) raises the premium, $1,000 and $2,500 (higher) lower it, each by the modelled delta, with the dropdown reflecting the choice.                                                                          |
 | `payment-plan.spec.ts`           | 2     | Annual billing charges `monthly × 12 − $12`, matching the discount the page advertises; and the same conversion holds on a quote loaded across three other dimensions.                                              |
 | `price-consistency.spec.ts`      | 2     | The hero, sticky-header and activation Pay buttons never disagree — after a reprice, and in annual billing (amount *and* period).                                                                                   |
-
 
 ---
 
@@ -99,16 +95,14 @@ annualTotal  = monthlyTotal × 12 − $12.00
 
 ### Loss of use is priced non-monotonically
 
-
 | Amount  | $15,000 | $20,000 | $25,000    | $30,000 |
 | ------- | ------- | ------- | ---------- | ------- |
 | Premium | $14.33  | $14.73  | **$14.33** | $15.28  |
 
-
 Raising coverage from $20,000 to $25,000 **lowers** the premium by $0.40, and lowering it back
 raises it — a direct contradiction of the rule that more coverage costs more.
 
-Captured as a `test.fail()` test so the suite stays green while the defect stays recorded. 
+Captured as a `test.fail()` test so the suite stays green while the defect stays recorded.
 
 ---
 
@@ -125,4 +119,3 @@ commit in this repo can change its behaviour and there is nothing to gate.
 - **Chromium only.** To keep it simple I focused only on Chromium, but it could be easily extended to other browsers.
 - **Lower level tests are left out of scope.** i.e: input validations on extra coverage cards, should be covered with unit tests.
 - **Valuable-item custom values.** For simplicity I used default increased values ($1000), not custom typed values.
-
