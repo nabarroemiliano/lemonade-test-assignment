@@ -1,0 +1,30 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","6691","stepping Loss of use up to $20,000 reprices the quote and stepping back restores it","chromium","2026-10-07","passed","2026-10-07","Coverage amounts","coverage-amount.spec.ts","",""
+"","7184","switching the free add-on Spouse on must leave the quote exactly as it was, and off restores the quote","chromium","2026-10-07","passed","2026-10-07","Policy add-ons","addons.spec.ts","",""
+"","6345","stepping Personal Liability up to $500,000 reprices the quote and stepping back restores it","chromium","2026-10-07","passed","2026-10-07","Coverage amounts","coverage-amount.spec.ts","",""
+"","6408","the annual conversion applies to the whole quote, not to each change","chromium","2026-10-07","passed","2026-10-07","Payment plan","payment-plan.spec.ts","",""
+"","4214","a higher deductible of $2,500 moves the premium the other way","chromium","2026-10-07","passed","2026-10-07","Deductible","deductible.spec.ts","",""
+"","2643","a higher deductible of $1,000 moves the premium the other way","chromium","2026-10-07","passed","2026-10-07","Deductible","deductible.spec.ts","",""
+"","6339","covering jewelry at $1,000 charges the advertised premium and removing it refunds it","chromium","2026-10-07","passed","2026-10-07","Extra coverage for valuable items","valuable-item-coverage.spec.ts","",""
+"","5267","an add-on that asks for details records them on its row","chromium","2026-10-07","passed","2026-10-07","Policy add-ons","addons.spec.ts","",""
+"KNOWN DEFECT — this test is expected to fail.
+
+Loss of use is priced non-monotonically:
+
+| Amount | $15,000 | $20,000 | $25,000 | $30,000 |
+| --- | --- | --- | --- | --- |
+| Premium | $14.33 | $14.73 | $14.33 | $15.28 |
+
+Raising coverage from $20,000 to $25,000 lowers the premium by $0.40,
+and lowering it back raises the premium. Reproduced deterministically
+in both directions with the price polled to a stable value each step.
+
+When the pricing is fixed this test will start passing and the run
+will fail, which is the signal to remove the `test.fail` marker.","8323","KNOWN DEFECT: raising Loss of use from $20,000 to $25,000 lowers the premium","chromium","2026-10-07","passed","2026-10-07","Coverage amounts","coverage-amount.spec.ts","",""
+"","5913","covering bicycles at $3,000 charges the advertised premium and removing it refunds it","chromium","2026-10-07","passed","2026-10-07","Extra coverage for valuable items","valuable-item-coverage.spec.ts","",""
+"","6315","switching the paid add-on Appliance Breakdown on should add exactly the premium it advertises, and off restores the quote","chromium","2026-10-07","passed","2026-10-07","Policy add-ons","addons.spec.ts","",""
+"","5410","a lower deductible of $250 moves the premium the other way","chromium","2026-10-07","passed","2026-10-07","Deductible","deductible.spec.ts","",""
+"","4114","billing annually charges twelve months less the advertised discount","chromium","2026-10-07","passed","2026-10-07","Payment plan","payment-plan.spec.ts","",""
+"","7917","stepping Personal Property down to $30,000 reprices the quote and stepping back restores it","chromium","2026-10-07","passed","2026-10-07","Coverage amounts","coverage-amount.spec.ts","",""
+"","4322","every price display agrees after the quote is repriced","chromium","2026-10-07","passed","2026-10-07","Price display consistency","price-consistency.spec.ts","",""
+"","4013","every price display agrees when the quote is billed annually","chromium","2026-10-07","passed","2026-10-07","Price display consistency","price-consistency.spec.ts","",""
