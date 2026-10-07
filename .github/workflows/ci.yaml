@@ -1,0 +1,126 @@
+name: E2E tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL of the system under test (keep the trailing slash)'
+        required: false
+        default: 'https://lemonade-hq.github.io/qa-interview-task/'
+        type: string
+      quote_id:
+        description: 'Quote the suite should exercise'
+        required: false
+        default: 'LQ42EE07089'
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run Playwright + publish Allure
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      BASE_URL: ${{ inputs.base_url }}
+      QUOTE_ID: ${{ inputs.quote_id }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: npm test
+
+      - name: Upload allure-results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 14
+
+      - name: Upload Playwright traces / videos
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: |
+            test-results
+            playwright-report
+          retention-days: 14
+
+      # The first run has no gh-pages branch yet, hence continue-on-error.
+      - name: Load previous Allure history
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+        continue-on-error: true
+
+      - name: Setup Java for Allure
+        if: always()
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install Allure CLI
+        if: always()
+        run: npm install -g allure-commandline --no-save
+
+      - name: Restore previous Allure history
+        if: always()
+        run: |
+          if [ -d "gh-pages/history" ]; then
+            mkdir -p allure-results/history
+            cp -r gh-pages/history/. allure-results/history/
+          fi
+
+      - name: Generate Allure report
+        if: always()
+        run: |
+          allure generate allure-results -o allure-report --clean
+          mkdir -p allure-history
+          cp -r allure-report "allure-history/${GITHUB_RUN_NUMBER}"
+          cp -r allure-report/. allure-history/
+
+      - name: Publish report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+          keep_files: true
+
+      - name: Add report link to summary
+        if: always()
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          {
+            echo "## Allure report"
+            echo ""
+            echo "This run: https://${OWNER}.github.io/${REPO_NAME}/${GITHUB_RUN_NUMBER}/"
+            echo "Latest:   https://${OWNER}.github.io/${REPO_NAME}/"
+          } >> "$GITHUB_STEP_SUMMARY"
