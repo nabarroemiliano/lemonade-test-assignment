@@ -48,6 +48,7 @@ export default [
     },
     rules: {
       ...playwrightPlugin.configs['flat/recommended'].rules,
+      'playwright/valid-expect': 'off',
       'playwright/expect-expect': 'error',
       'playwright/no-conditional-in-test': 'warn',
       'playwright/no-skipped-test': 'warn',

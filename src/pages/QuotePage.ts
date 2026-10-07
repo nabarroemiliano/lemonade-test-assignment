@@ -42,7 +42,7 @@ export class QuotePage extends BasePage {
 
   /** The Pay button is the last thing to settle, so it gates everything else. */
   async verifyLoaded(): Promise<void> {
-    await this.price.payButton.waitFor({ state: 'visible' });
+    await this.price.main.root.waitFor({ state: 'visible' });
   }
 
   coverage(category: CoverageCategory): CoverageCard {

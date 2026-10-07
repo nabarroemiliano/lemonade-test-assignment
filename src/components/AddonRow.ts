@@ -20,7 +20,7 @@ export class AddonRow {
     return new AddonRow(page.locator(`#addon-${key}`));
   }
 
-  async isEnabled(): Promise<boolean> {
+  async isSwitchedOn(): Promise<boolean> {
     return this.checkbox.isChecked();
   }
 

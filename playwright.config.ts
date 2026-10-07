@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const isCI = Boolean(process.env.CI);
 
@@ -23,8 +23,6 @@ export default defineConfig({
   ],
 
   use: {
-    // The trailing slash is load-bearing: pages navigate to the relative path
-    // `quotes/<id>`, and without it the /qa-interview-task prefix is dropped.
     baseURL: process.env.BASE_URL ?? 'https://lemonade-hq.github.io/qa-interview-task/',
     actionTimeout: 10_000,
     navigationTimeout: 30_000,
