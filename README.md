@@ -2,7 +2,7 @@
 
 End-to-end tests for the [Lemonade quote page](https://lemonade-hq.github.io/qa-interview-task/quotes/LQ42EE07089), built with **Playwright + TypeScript**, organised around the **Page Object + Component Object** pattern, and reported through **Allure**.
 
-The suite verifies that the quote price changes correctly when coverage amounts, extra coverage for valuable items, add-ons, the deductible and the payment plan change — and it found two pricing defects along the way, written up at the bottom of this file.
+The suite verifies that the quote price changes correctly when coverage amounts, extra coverage for valuable items, add-ons, the deductible and the payment plan change — and it found one pricing defect along the way, written up at the bottom of this file.
 
 ---
 
@@ -110,12 +110,13 @@ Captured as a `test.fail()` test so the suite stays green while the defect stays
 
 `.github/workflows/ci.yaml` runs on `workflow_dispatch` only, with `base_url` and `quote_id`
 overridable at dispatch time. The system under test is a third-party mock we do not control, so no
-commit in this repo can change its behaviour and there is nothing to gate.
+commit in this repo can change its behaviour therefore there is no gate at pull request.
 
 ---
 
 ## Known gaps
 
 - **Chromium only.** To keep it simple I focused only on Chromium, but it could be easily extended to other browsers.
-- **Lower level tests are left out of scope.** i.e: input validations on extra coverage cards, should be covered with unit tests.
+- **Coverage is demostrative.** Because the tests are parameterized, the suite is easily extensible to support additional use case combinations.
+- **Lower level tests are left out of scope.** i.e: input validations on extra coverage cards, it should be covered with unit tests.
 - **Valuable-item custom values.** For simplicity I used default increased values ($1000), not custom typed values.

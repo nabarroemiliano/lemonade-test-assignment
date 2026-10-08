@@ -1,3 +1,5 @@
+import { test } from '@playwright/test';
+
 import type { AddonKey, PaymentPlan } from '../data/quote.data';
 import type { QuotePage } from '../pages/QuotePage';
 import { confirmRemoval } from './valuableItems.steps';
@@ -13,30 +15,46 @@ export async function enableAddon(
   key: AddonKey,
   details?: AddonDetails,
 ): Promise<void> {
-  await quotePage.addon(key).toggle.click();
+  const label = key.replace(/_/g, ' ');
 
-  if (details === undefined) {
-    return;
-  }
+  return test.step(`switch on the "${label}" add-on`, async () => {
+    await test.step(`click the "${label}" add-on toggle`, () =>
+      quotePage.addon(key).toggle.click());
 
-  const form = quotePage.addonFormDialog;
-  await form.root.waitFor();
-  await form.firstNameField.fill(details.firstName);
-  await form.lastNameField.fill(details.lastName);
+    if (details === undefined) {
+      return;
+    }
 
-  if (details.email !== undefined) {
-    await form.emailField.fill(details.email);
-  }
+    const form = quotePage.addonFormDialog;
+    await form.root.waitFor();
 
-  await form.submitButton.click();
-  await form.root.waitFor({ state: 'hidden' });
+    const emailNote = details.email !== undefined ? `, email: "${details.email}"` : '';
+
+    await test.step(`fill in the add-on details form (first name: "${details.firstName}", last name: "${details.lastName}"${emailNote})`, async () => {
+      await form.firstNameField.fill(details.firstName);
+      await form.lastNameField.fill(details.lastName);
+
+      if (details.email !== undefined) {
+        await form.emailField.fill(details.email);
+      }
+    });
+
+    await test.step('submit the add-on details form', () => form.submitButton.click());
+    await form.root.waitFor({ state: 'hidden' });
+  });
 }
 
 export async function disableAddon(quotePage: QuotePage, key: AddonKey): Promise<void> {
-  await quotePage.addon(key).toggle.click();
-  await confirmRemoval(quotePage);
+  const label = key.replace(/_/g, ' ');
+
+  return test.step(`switch off the "${label}" add-on`, async () => {
+    await test.step(`click the "${label}" add-on toggle`, () =>
+      quotePage.addon(key).toggle.click());
+    await confirmRemoval(quotePage);
+  });
 }
 
 export async function selectPaymentPlan(quotePage: QuotePage, plan: PaymentPlan): Promise<void> {
-  await quotePage.paymentPlan.labelFor(plan).click();
+  return test.step(`select the "${plan}" payment plan`, () =>
+    quotePage.paymentPlan.labelFor(plan).click());
 }

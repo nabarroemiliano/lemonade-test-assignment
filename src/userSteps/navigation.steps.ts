@@ -1,3 +1,5 @@
+import { test } from '@playwright/test';
+
 import type { QuotePage } from '../pages/QuotePage';
 
 /**
@@ -10,6 +12,8 @@ import type { QuotePage } from '../pages/QuotePage';
  * on screen at once.
  */
 export async function scrollToStickyHeader(quotePage: QuotePage): Promise<void> {
-  await quotePage.price.activation.root.scrollIntoViewIfNeeded();
-  await quotePage.price.header.root.waitFor();
+  return test.step('scroll down to reveal the sticky header', async () => {
+    await quotePage.price.activation.root.scrollIntoViewIfNeeded();
+    await quotePage.price.header.root.waitFor();
+  });
 }
